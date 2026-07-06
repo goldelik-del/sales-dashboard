@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountDashboardCard } from "@/components/AccountDashboard";
 import { AccountsTable } from "@/components/AccountsTable";
 import {
   IndustryChart,
@@ -9,9 +10,12 @@ import {
 } from "@/components/Charts";
 import { PricingTable, TamBreakdownTable } from "@/components/PricingTables";
 import { StatGrid } from "@/components/StatCard";
+import { TopAccountsList } from "@/components/TopAccountsList";
 import { FILTERED_ACCOUNTS } from "@/data/accounts";
 import { CURSOR_PRICING, TAM_SCENARIOS } from "@/data/pricing";
+import { getTopAccounts } from "@/lib/accounts";
 import { calculateTam, formatCurrency } from "@/lib/tam";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 export default function Dashboard() {
@@ -33,6 +37,8 @@ export default function Dashboard() {
   const standardPrice =
     CURSOR_PRICING.find((p) => p.type === "teams_standard")!.annualMonthlyPrice;
 
+  const topAccounts = useMemo(() => getTopAccounts(10, scenarioId), [scenarioId]);
+
   return (
     <div className="min-h-screen bg-[#0c0c14] text-white">
       <header className="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-sm">
@@ -50,7 +56,14 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/accounts"
+              className="text-sm text-zinc-400 transition-colors hover:text-white"
+            >
+              Top 10 Accounts →
+            </Link>
+            <div className="flex items-center gap-2">
             <label htmlFor="scenario" className="text-sm text-zinc-400">
               Scenario:
             </label>
@@ -66,6 +79,7 @@ export default function Dashboard() {
                 </option>
               ))}
             </select>
+            </div>
           </div>
         </div>
       </header>
@@ -86,6 +100,37 @@ export default function Dashboard() {
           annualTam={tam.annualTam}
           penetrationRate={scenario.penetrationRate}
         />
+
+        <section>
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Top 10 Accounts</h2>
+              <p className="text-sm text-zinc-500">
+                Highest engineering headcount · ranked by TAM opportunity
+              </p>
+            </div>
+            <Link
+              href="/accounts"
+              className="text-sm text-indigo-400 hover:underline"
+            >
+              View all dashboards →
+            </Link>
+          </div>
+          <TopAccountsList accounts={topAccounts} />
+        </section>
+
+        <section>
+          <h2 className="mb-2 text-lg font-semibold">Account Visual Dashboards</h2>
+          <p className="mb-4 text-sm text-zinc-500">
+            Snapshot of each top account&apos;s license opportunity. Click for full
+            breakdown with charts and scenario analysis.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {topAccounts.map((summary) => (
+              <AccountDashboardCard key={summary.account.id} summary={summary} />
+            ))}
+          </div>
+        </section>
 
         <section>
           <h2 className="mb-4 text-lg font-semibold">TAM by License Type</h2>

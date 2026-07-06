@@ -83,3 +83,15 @@ export interface TamSummary {
   byIndustry: Record<string, { accounts: number; engineers: number; annualTam: number }>;
   bySize: Record<CompanySize, { accounts: number; engineers: number; annualTam: number }>;
 }
+
+export interface AccountTamSummary {
+  account: Account;
+  rank: number;
+  addressableSeats: number;
+  monthlyTam: number;
+  annualTam: number;
+  engineerRatio: number;
+  byLicense: LicenseTamBreakdown[];
+  scenarios: { id: string; name: string; annualTam: number; penetrationRate: number }[];
+  headcount: { engineers: number; other: number };
+}

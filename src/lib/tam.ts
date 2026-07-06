@@ -1,6 +1,7 @@
-import { PRICING_BY_TYPE } from "@/data/pricing";
+import { PRICING_BY_TYPE, TAM_SCENARIOS } from "@/data/pricing";
 import type {
   Account,
+  AccountTamSummary,
   AustralianState,
   CompanySize,
   LicenseTamBreakdown,
@@ -34,21 +35,16 @@ function allocateSeats(
   return seatMap;
 }
 
-export function calculateTam(
-  accounts: Account[],
-  scenario: TamScenario,
-  useAnnualBilling = true
-): TamSummary {
-  const totalEngineers = accounts.reduce((sum, a) => sum + a.engineers, 0);
-  const totalEmployees = accounts.reduce((sum, a) => sum + a.totalEmployees, 0);
-
-  const seatMap = allocateSeats(totalEngineers, scenario.penetrationRate, scenario.allocations);
-
+function buildLicenseBreakdown(
+  seatMap: Map<LicenseType, number>,
+  useAnnualBilling: boolean
+): { byLicense: LicenseTamBreakdown[]; monthlyTam: number; annualTam: number } {
   let monthlyTam = 0;
   let annualTam = 0;
   const byLicense: LicenseTamBreakdown[] = [];
 
   for (const [type, seats] of seatMap) {
+    if (seats === 0) continue;
     const pricing = PRICING_BY_TYPE[type];
     const pricePerSeat = useAnnualBilling ? pricing.annualMonthlyPrice : pricing.monthlyPrice;
     const monthly = seats * pricePerSeat;
@@ -72,6 +68,57 @@ export function calculateTam(
   }
 
   byLicense.sort((a, b) => b.annualRevenue - a.annualRevenue);
+
+  return { byLicense, monthlyTam, annualTam };
+}
+
+export function calculateAccountTam(
+  account: Account,
+  scenario: TamScenario,
+  useAnnualBilling = true
+): AccountTamSummary {
+  const seatMap = allocateSeats(account.engineers, scenario.penetrationRate, scenario.allocations);
+  const addressableSeats = [...seatMap.values()].reduce((s, n) => s + n, 0);
+  const { byLicense, monthlyTam, annualTam } = buildLicenseBreakdown(seatMap, useAnnualBilling);
+
+  const scenarios = TAM_SCENARIOS.map((s) => {
+    const sSeatMap = allocateSeats(account.engineers, s.penetrationRate, s.allocations);
+    const { annualTam: sAnnual } = buildLicenseBreakdown(sSeatMap, useAnnualBilling);
+    return {
+      id: s.id,
+      name: s.name,
+      annualTam: sAnnual,
+      penetrationRate: s.penetrationRate,
+    };
+  });
+
+  return {
+    account,
+    rank: 0,
+    addressableSeats,
+    monthlyTam,
+    annualTam,
+    engineerRatio: account.totalEmployees > 0 ? account.engineers / account.totalEmployees : 0,
+    byLicense,
+    scenarios,
+    headcount: {
+      engineers: account.engineers,
+      other: Math.max(0, account.totalEmployees - account.engineers),
+    },
+  };
+}
+
+export function calculateTam(
+  accounts: Account[],
+  scenario: TamScenario,
+  useAnnualBilling = true
+): TamSummary {
+  const totalEngineers = accounts.reduce((sum, a) => sum + a.engineers, 0);
+  const totalEmployees = accounts.reduce((sum, a) => sum + a.totalEmployees, 0);
+
+  const seatMap = allocateSeats(totalEngineers, scenario.penetrationRate, scenario.allocations);
+
+  const { byLicense, monthlyTam, annualTam } = buildLicenseBreakdown(seatMap, useAnnualBilling);
 
   const byState = Object.fromEntries(
     STATES.map((state) => {

@@ -1,5 +1,4 @@
-import { formatCurrency, formatNumber, skuLabel } from "@/lib/tam";
-import type { LicenseType } from "@/types";
+import { formatCurrency, formatNumber, getSkuTam } from "@/lib/tam";
 
 interface StatCardProps {
   label: string;
@@ -29,18 +28,17 @@ export function StatCard({ label, value, subtext, accent }: StatCardProps) {
 interface StatGridProps {
   totalAccounts: number;
   totalEngineers: number;
-  monthlyTam: number;
-  annualTam: number;
-  selectedSku: LicenseType;
+  annualBilling: boolean;
 }
 
 export function StatGrid({
   totalAccounts,
   totalEngineers,
-  monthlyTam,
-  annualTam,
-  selectedSku,
+  annualBilling,
 }: StatGridProps) {
+  const minTam = getSkuTam(totalEngineers, "pro", annualBilling);
+  const maxTam = getSkuTam(totalEngineers, "ultra", annualBilling);
+
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       <StatCard
@@ -54,15 +52,15 @@ export function StatGrid({
         subtext="Addressable headcount"
       />
       <StatCard
-        label={`Monthly TAM (${skuLabel(selectedSku)})`}
-        value={formatCurrency(monthlyTam, true)}
-        subtext="SKU price × engineers"
+        label="Minimum TAM (Pro)"
+        value={formatCurrency(minTam.monthlyRevenue, true)}
+        subtext={`${formatCurrency(minTam.unitPrice)}/seat × ${formatNumber(totalEngineers)} engineers`}
       />
       <StatCard
-        label={`Annual TAM (${skuLabel(selectedSku)})`}
-        value={formatCurrency(annualTam, true)}
+        label="Maximum TAM (Ultra)"
+        value={formatCurrency(maxTam.monthlyRevenue, true)}
         accent
-        subtext="× 12 months"
+        subtext={`${formatCurrency(maxTam.unitPrice)}/seat × ${formatNumber(totalEngineers)} engineers`}
       />
     </div>
   );

@@ -37,9 +37,7 @@ export default function TamPage() {
         <StatGrid
           totalAccounts={tam.totalAccounts}
           totalEngineers={tam.totalEngineers}
-          monthlyTam={tam.monthlyTam}
-          annualTam={tam.annualTam}
-          selectedSku={selectedSku}
+          annualBilling={annualBilling}
         />
 
         <SkuTamMatrix

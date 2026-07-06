@@ -9,6 +9,7 @@ const NAV = [
   { href: "/", label: "Overview", icon: "◈" },
   { href: "/accounts", label: "Top 10 Accounts", icon: "★" },
   { href: "/tam", label: "TAM by SKU", icon: "▦" },
+  { href: "/dev", label: "Dev Server", icon: "⚙" },
 ];
 
 interface AppShellProps {

@@ -79,7 +79,9 @@ export default function Dashboard() {
           <div className="mb-4 flex items-end justify-between">
             <div>
               <h2 className="text-lg font-semibold">Top 10 Accounts</h2>
-              <p className="text-sm text-zinc-500">Ranked by engineering headcount</p>
+              <p className="text-sm text-zinc-500">
+                Click to drill into leadership contacts, company LinkedIn &amp; TAM
+              </p>
             </div>
           </div>
           <TopAccountsList accounts={topAccounts} />

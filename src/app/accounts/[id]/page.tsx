@@ -1,6 +1,6 @@
 "use client";
 
-import { AccountDashboard } from "@/components/AccountDashboard";
+import { AccountDetailView } from "@/components/AccountDetailView";
 import { AppShell } from "@/components/AppShell";
 import { getAccountById, getTopAccounts } from "@/lib/accounts";
 import { calculateAccountTam } from "@/lib/tam";
@@ -31,11 +31,8 @@ export default function AccountPage() {
   }
 
   return (
-    <AppShell
-      title={account.name}
-      subtitle={`${account.city}, ${account.state} · ${account.engineers} engineers`}
-    >
-      <AccountDashboard summary={summary} showBackLink />
+    <AppShell title={account.name} subtitle="Account drill-down">
+      <AccountDetailView summary={summary} />
     </AppShell>
   );
 }

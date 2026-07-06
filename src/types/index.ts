@@ -41,6 +41,24 @@ export interface Account {
   notes?: string;
 }
 
+export type LeadershipLevel = "director" | "senior_director" | "head" | "vp" | "svp" | "cto";
+
+export interface LeadershipContact {
+  id: string;
+  accountId: string;
+  name: string;
+  title: string;
+  linkedinUrl: string;
+  level: LeadershipLevel;
+  location?: string;
+}
+
+export interface CompanyProfile {
+  accountId: string;
+  linkedinCompanyUrl: string;
+  logoUrl: string;
+}
+
 export interface LicensePricing {
   type: LicenseType;
   name: string;

@@ -8,6 +8,8 @@ import { useApp } from "@/context/AppContext";
 import type { AccountTamSummary } from "@/types";
 import { formatCurrency, formatNumber, skuLabel } from "@/lib/tam";
 import Link from "next/link";
+import { CompanyLogo } from "@/components/CompanyLogo";
+import { getCompanyProfile, getLogoUrl } from "@/data/company-profiles";
 import {
   Cell,
   Pie,
@@ -23,7 +25,7 @@ interface AccountDashboardProps {
   showBackLink?: boolean;
 }
 
-export function AccountDashboard({ summary, showBackLink = true }: AccountDashboardProps) {
+export function AccountDashboard({ summary, showBackLink = false }: AccountDashboardProps) {
   const { selectedSku, setSelectedSku } = useApp();
   const { account, bySku, headcount } = summary;
   const engPercent = (summary.engineerRatio * 100).toFixed(0);
@@ -42,28 +44,6 @@ export function AccountDashboard({ summary, showBackLink = true }: AccountDashbo
           ← Back to Top 10
         </Link>
       )}
-
-      <div className="rounded-xl border border-zinc-800 bg-gradient-to-br from-indigo-500/10 via-zinc-900/80 to-zinc-900/50 p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div className="mb-2 flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-indigo-500/40 bg-indigo-500/20 text-lg font-bold text-indigo-300">
-                #{summary.rank}
-              </span>
-              <div>
-                <h1 className="text-2xl font-bold text-white">{account.name}</h1>
-                <p className="text-sm text-zinc-400">
-                  {account.city}, {account.state} · Founded {account.founded}
-                </p>
-              </div>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">{account.industry}</span>
-              <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">{account.website}</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard label="Engineers" value={formatNumber(account.engineers)} subtext={`${engPercent}% of workforce`} />
@@ -121,41 +101,46 @@ interface AccountDashboardCardProps {
 }
 
 export function AccountDashboardCard({ summary }: AccountDashboardCardProps) {
-  const { account, annualTam, bySku } = summary;
-  const topSku = [...bySku].sort((a, b) => b.annualRevenue - a.annualRevenue)[0];
+  const { account, annualTam } = summary;
+  const profile = getCompanyProfile(account.id);
+  const logoUrl = profile?.logoUrl ?? getLogoUrl(account.website);
 
   return (
     <Link
       href={`/accounts/${account.id}`}
       className="group block rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 transition-all hover:border-indigo-500/40 hover:bg-indigo-500/5"
     >
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-800 text-xs font-bold text-zinc-300 group-hover:bg-indigo-500/20 group-hover:text-indigo-300">
-            #{summary.rank}
-          </span>
-          <h3 className="font-semibold text-white">{account.name}</h3>
+      <div className="mb-3 flex items-start gap-3">
+        <CompanyLogo name={account.name} logoUrl={logoUrl} size="sm" />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-800 text-[10px] font-bold text-zinc-300 group-hover:bg-indigo-500/20 group-hover:text-indigo-300">
+                #{summary.rank}
+              </span>
+              <h3 className="truncate font-semibold text-white group-hover:text-indigo-200">
+                {account.name}
+              </h3>
+            </div>
+            <span className="text-xs text-zinc-500">{account.state}</span>
+          </div>
+          <p className="mt-0.5 text-xs text-zinc-500">{account.engineers} engineers</p>
         </div>
-        <span className="text-xs text-zinc-500">{account.state}</span>
       </div>
 
-      <div className="mb-3 grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-lg bg-zinc-800/50 py-2">
-          <p className="font-mono text-sm text-white">{account.engineers}</p>
-          <p className="text-[10px] text-zinc-500">Engineers</p>
-        </div>
+      <div className="mb-3 grid grid-cols-2 gap-2 text-center">
         <div className="rounded-lg bg-zinc-800/50 py-2">
           <p className="font-mono text-sm text-indigo-300">{formatCurrency(annualTam, true)}</p>
           <p className="text-[10px] text-zinc-500">Annual TAM</p>
         </div>
         <div className="rounded-lg bg-zinc-800/50 py-2">
-          <p className="font-mono text-sm text-white">{formatCurrency(topSku?.annualRevenue ?? 0, true)}</p>
-          <p className="text-[10px] text-zinc-500">Max SKU</p>
+          <p className="text-xs font-medium text-[#70b7f0]">Leadership</p>
+          <p className="text-[10px] text-zinc-500">View contacts →</p>
         </div>
       </div>
 
-      <p className="text-xs text-indigo-400 opacity-0 transition-opacity group-hover:opacity-100">
-        View full dashboard →
+      <p className="text-xs text-indigo-400 opacity-70 transition-opacity group-hover:opacity-100">
+        Drill into account →
       </p>
     </Link>
   );

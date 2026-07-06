@@ -3,19 +3,20 @@
 import { AccountCompanyHeader } from "@/components/AccountCompanyHeader";
 import { AccountDashboard } from "@/components/AccountDashboard";
 import { LeadershipPanel } from "@/components/LeadershipPanel";
+import { MessagingPanel } from "@/components/MessagingPanel";
 import { isTopAccount } from "@/lib/accounts";
 import type { AccountTamSummary } from "@/types";
 import Link from "next/link";
 import { useState } from "react";
 
-type AccountTab = "leadership" | "tam";
+type AccountTab = "linkedin" | "tam" | "messaging";
 
 interface AccountDetailViewProps {
   summary: AccountTamSummary;
 }
 
 export function AccountDetailView({ summary }: AccountDetailViewProps) {
-  const [tab, setTab] = useState<AccountTab>("leadership");
+  const [tab, setTab] = useState<AccountTab>("linkedin");
   const { account } = summary;
   const hasLeadership = isTopAccount(account.id);
 
@@ -32,20 +33,31 @@ export function AccountDetailView({ summary }: AccountDetailViewProps) {
 
       {hasLeadership && (
         <div className="flex gap-1 rounded-lg border border-zinc-800 bg-zinc-900/50 p-1">
-          <TabButton active={tab === "leadership"} onClick={() => setTab("leadership")}>
-            Leadership
+          <TabButton active={tab === "linkedin"} onClick={() => setTab("linkedin")}>
+            LinkedIn
           </TabButton>
           <TabButton active={tab === "tam"} onClick={() => setTab("tam")}>
-            TAM Analysis
+            TAM
+          </TabButton>
+          <TabButton active={tab === "messaging"} onClick={() => setTab("messaging")}>
+            Messaging
           </TabButton>
         </div>
       )}
 
-      {hasLeadership && tab === "leadership" ? (
+      {hasLeadership && tab === "linkedin" && (
         <LeadershipPanel accountId={account.id} accountName={account.name} />
-      ) : (
+      )}
+
+      {hasLeadership && tab === "tam" && (
         <AccountDashboard summary={summary} showBackLink={false} />
       )}
+
+      {hasLeadership && tab === "messaging" && (
+        <MessagingPanel account={account} summary={summary} />
+      )}
+
+      {!hasLeadership && <AccountDashboard summary={summary} showBackLink={false} />}
     </div>
   );
 }

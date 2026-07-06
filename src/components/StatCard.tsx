@@ -53,14 +53,14 @@ export function StatGrid({
       />
       <StatCard
         label="Minimum TAM (Pro)"
-        value={formatCurrency(minTam.monthlyRevenue, true)}
-        subtext={`${formatCurrency(minTam.unitPrice)}/seat × ${formatNumber(totalEngineers)} engineers`}
+        value={formatCurrency(minTam.annualRevenue, true)}
+        subtext={`${formatCurrency(minTam.unitPrice)}/seat × ${formatNumber(totalEngineers)} eng × 12 mo`}
       />
       <StatCard
         label="Maximum TAM (Ultra)"
-        value={formatCurrency(maxTam.monthlyRevenue, true)}
+        value={formatCurrency(maxTam.annualRevenue, true)}
         accent
-        subtext={`${formatCurrency(maxTam.unitPrice)}/seat × ${formatNumber(totalEngineers)} engineers`}
+        subtext={`${formatCurrency(maxTam.unitPrice)}/seat × ${formatNumber(totalEngineers)} eng × 12 mo`}
       />
     </div>
   );

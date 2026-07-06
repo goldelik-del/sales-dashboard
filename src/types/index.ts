@@ -50,23 +50,11 @@ export interface LicensePricing {
   targetSegment: string;
 }
 
-export interface LicenseAllocation {
-  type: LicenseType;
-  percentage: number;
-}
-
-export interface TamScenario {
-  id: string;
-  name: string;
-  description: string;
-  penetrationRate: number;
-  allocations: LicenseAllocation[];
-}
-
 export interface LicenseTamBreakdown {
   type: LicenseType;
   name: string;
   seats: number;
+  unitPrice: number;
   monthlyRevenue: number;
   annualRevenue: number;
   percentage: number;
@@ -76,9 +64,10 @@ export interface TamSummary {
   totalAccounts: number;
   totalEngineers: number;
   totalEmployees: number;
+  selectedSku: LicenseType;
   monthlyTam: number;
   annualTam: number;
-  byLicense: LicenseTamBreakdown[];
+  bySku: LicenseTamBreakdown[];
   byState: Record<AustralianState, { accounts: number; engineers: number; annualTam: number }>;
   byIndustry: Record<string, { accounts: number; engineers: number; annualTam: number }>;
   bySize: Record<CompanySize, { accounts: number; engineers: number; annualTam: number }>;
@@ -87,11 +76,13 @@ export interface TamSummary {
 export interface AccountTamSummary {
   account: Account;
   rank: number;
-  addressableSeats: number;
+  engineers: number;
+  selectedSku: LicenseType;
+  bySku: LicenseTamBreakdown[];
   monthlyTam: number;
   annualTam: number;
   engineerRatio: number;
-  byLicense: LicenseTamBreakdown[];
-  scenarios: { id: string; name: string; annualTam: number; penetrationRate: number }[];
   headcount: { engineers: number; other: number };
 }
+
+export type AppView = "overview" | "top-accounts" | "all-accounts" | "sku-tam";

@@ -71,8 +71,6 @@ export const ACCOUNTS: Account[] = [
   { id: "63", name: "Clipchamp", city: "Brisbane", state: "QLD", industry: "SaaS", totalEmployees: 100, engineers: 60, founded: 2011, website: "clipchamp.com", size: "growth", notes: "Microsoft subsidiary, AU-founded" },
   { id: "64", name: "TechnologyOne", city: "Brisbane", state: "QLD", industry: "SaaS", totalEmployees: 1200, engineers: 250, founded: 1987, website: "technologyonecorp.com", size: "scale" },
   { id: "65", name: "Minesoft", city: "Brisbane", state: "QLD", industry: "SaaS", totalEmployees: 50, engineers: 30, founded: 2010, website: "minesoft.com.au", size: "startup" },
-  { id: "66", name: "Canva", city: "Sydney", state: "NSW", industry: "SaaS", totalEmployees: 4000, engineers: 250, founded: 2012, website: "canva.com", size: "scale", notes: "Capped at 250 AU engineers for this segment" },
-  { id: "67", name: "Atlassian", city: "Sydney", state: "NSW", industry: "DevTools", totalEmployees: 10000, engineers: 250, founded: 2002, website: "atlassian.com", size: "scale", notes: "AU engineering hub capped at 250" },
   { id: "68", name: "WiseTech Global", city: "Sydney", state: "NSW", industry: "SaaS", totalEmployees: 9000, engineers: 250, founded: 1994, website: "wisetechglobal.com", size: "scale", notes: "AU engineering capped at 250" },
   { id: "69", name: "REA Group", city: "Melbourne", state: "VIC", industry: "PropTech", totalEmployees: 3000, engineers: 250, founded: 1995, website: "rea-group.com", size: "scale", notes: "AU engineering capped at 250" },
   { id: "70", name: "Xero", city: "Melbourne", state: "VIC", industry: "Fintech", totalEmployees: 5000, engineers: 250, founded: 2006, website: "xero.com", size: "scale", notes: "AU engineering capped at 250" },

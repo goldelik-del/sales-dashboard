@@ -1,4 +1,4 @@
-import type { LicensePricing, TamScenario } from "@/types";
+import type { LicensePricing } from "@/types";
 
 /** Cursor pricing as of July 2026 — https://cursor.com/docs/account/teams/pricing */
 export const CURSOR_PRICING: LicensePricing[] = [
@@ -56,51 +56,4 @@ export const PRICING_BY_TYPE = Object.fromEntries(
   CURSOR_PRICING.map((p) => [p.type, p])
 ) as Record<string, LicensePricing>;
 
-export const TAM_SCENARIOS: TamScenario[] = [
-  {
-    id: "conservative",
-    name: "Conservative",
-    description: "50% market penetration, mostly Standard seats",
-    penetrationRate: 0.5,
-    allocations: [
-      { type: "teams_standard", percentage: 0.75 },
-      { type: "teams_premium", percentage: 0.1 },
-      { type: "pro", percentage: 0.1 },
-      { type: "pro_plus", percentage: 0.03 },
-      { type: "enterprise", percentage: 0.02 },
-    ],
-  },
-  {
-    id: "base",
-    name: "Base Case",
-    description: "65% penetration with realistic seat mix",
-    penetrationRate: 0.65,
-    allocations: [
-      { type: "teams_standard", percentage: 0.68 },
-      { type: "teams_premium", percentage: 0.15 },
-      { type: "pro", percentage: 0.08 },
-      { type: "pro_plus", percentage: 0.04 },
-      { type: "enterprise", percentage: 0.05 },
-    ],
-  },
-  {
-    id: "optimistic",
-    name: "Optimistic",
-    description: "80% penetration, higher Premium & Enterprise mix",
-    penetrationRate: 0.8,
-    allocations: [
-      { type: "teams_standard", percentage: 0.6 },
-      { type: "teams_premium", percentage: 0.2 },
-      { type: "pro", percentage: 0.05 },
-      { type: "pro_plus", percentage: 0.05 },
-      { type: "enterprise", percentage: 0.1 },
-    ],
-  },
-  {
-    id: "teams_only",
-    name: "Teams Only (Ceiling)",
-    description: "100% penetration, all engineers on Teams Standard",
-    penetrationRate: 1.0,
-    allocations: [{ type: "teams_standard", percentage: 1.0 }],
-  },
-];
+export const DEFAULT_SKU = "teams_standard" as const;

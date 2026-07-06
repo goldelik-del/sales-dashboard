@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AppProvider } from "@/context/AppContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Australia TAM Dashboard | Cursor",
   description:
-    "Total addressable market dashboard for Australian tech accounts with 250 engineers or under, using Cursor pricing.",
+    "Total addressable market dashboard for Australian tech accounts with 250 engineers or under.",
 };
 
 export default function RootLayout({
@@ -24,11 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-[#0c0c14]">{children}</body>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-[#08080f]">
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }

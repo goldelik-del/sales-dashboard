@@ -1,4 +1,5 @@
-import { formatCurrency, formatNumber } from "@/lib/tam";
+import { formatCurrency, formatNumber, skuLabel } from "@/lib/tam";
+import type { LicenseType } from "@/types";
 
 interface StatCardProps {
   label: string;
@@ -17,11 +18,7 @@ export function StatCard({ label, value, subtext, accent }: StatCardProps) {
       }`}
     >
       <p className="text-sm font-medium text-zinc-400">{label}</p>
-      <p
-        className={`mt-1 text-2xl font-bold tracking-tight ${
-          accent ? "text-indigo-300" : "text-white"
-        }`}
-      >
+      <p className={`mt-1 text-2xl font-bold tracking-tight ${accent ? "text-indigo-300" : "text-white"}`}>
         {value}
       </p>
       {subtext && <p className="mt-1 text-xs text-zinc-500">{subtext}</p>}
@@ -34,7 +31,7 @@ interface StatGridProps {
   totalEngineers: number;
   monthlyTam: number;
   annualTam: number;
-  penetrationRate: number;
+  selectedSku: LicenseType;
 }
 
 export function StatGrid({
@@ -42,7 +39,7 @@ export function StatGrid({
   totalEngineers,
   monthlyTam,
   annualTam,
-  penetrationRate,
+  selectedSku,
 }: StatGridProps) {
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -54,18 +51,18 @@ export function StatGrid({
       <StatCard
         label="Total Engineers"
         value={formatNumber(totalEngineers)}
-        subtext={`${(penetrationRate * 100).toFixed(0)}% addressable`}
+        subtext="Addressable headcount"
       />
       <StatCard
-        label="Monthly TAM"
+        label={`Monthly TAM (${skuLabel(selectedSku)})`}
         value={formatCurrency(monthlyTam, true)}
-        subtext="Annual billing rates"
+        subtext="SKU price × engineers"
       />
       <StatCard
-        label="Annual TAM"
+        label={`Annual TAM (${skuLabel(selectedSku)})`}
         value={formatCurrency(annualTam, true)}
         accent
-        subtext="Total addressable market"
+        subtext="× 12 months"
       />
     </div>
   );

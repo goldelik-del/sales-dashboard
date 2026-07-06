@@ -1,45 +1,42 @@
 # Australia TAM Dashboard
 
-A dashboard tracking Australian tech accounts with **250 engineers or under**, applying **Cursor's July 2026 pricing** to calculate total addressable market (TAM) by license type.
+GUI for tracking Australian tech accounts with **≤250 engineers**, with TAM calculated as **SKU price × engineering headcount**.
 
 ## Features
 
-- **95 target accounts** across NSW, VIC, QLD, WA, SA, and ACT
-- **~8,800 engineers** in the addressable segment
-- **TAM by license type**: Pro, Pro+, Ultra, Teams Standard, Teams Premium, Enterprise
-- **4 scenarios**: Conservative (50%), Base Case (65%), Optimistic (80%), Teams Only ceiling (100%)
-- Interactive charts by state and industry
-- Searchable, sortable accounts table
+- **Sidebar GUI** with navigation, SKU selector, and billing toggle
+- **93 target accounts** (Canva & Atlassian excluded — over 250 engineers)
+- **TAM by SKU**: Each license type = unit price × total engineers
+- **Top 10 accounts** with individual visual dashboards
+- Charts by state, industry, and SKU comparison
+
+## TAM Formula
+
+```
+Monthly TAM (per SKU) = unit price × engineering headcount
+Annual TAM (per SKU)  = monthly TAM × 12
+```
+
+Each SKU row is independent (ceiling if all engineers adopted that license).
 
 ## Cursor Pricing (July 2026)
 
-| License | Monthly | Annual (20% off) |
-|---------|---------|------------------|
+| SKU | Monthly | Annual (20% off) |
+|-----|---------|------------------|
 | Pro | $20/seat | $16/seat |
 | Pro+ | $60/seat | $48/seat |
 | Ultra | $200/seat | $160/seat |
 | Teams Standard | $40/seat | $32/seat |
 | Teams Premium | $120/seat | $96/seat |
-| Enterprise | ~$55/seat (est.) | ~$44/seat (est.) |
+| Enterprise | ~$55/seat | ~$44/seat |
 
-## Quick Start
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
-
-## TAM Summary (Base Case — 65% penetration)
-
-At annual billing rates with a realistic seat mix (68% Standard, 15% Premium, 8% Pro, 4% Pro+, 5% Enterprise):
-
-- **~5,700 addressable seats**
-- **~$2.9M annual TAM** (AUD, at USD-equivalent pricing)
-
-See the dashboard for full breakdowns by license, state, and industry.
-
-## Data Sources
-
-Engineer counts are estimates from public sources (LinkedIn, company reports, industry directories). Companies with global HQs are capped at 250 AU-based engineers for this segment.
+- **Overview**: http://localhost:3000
+- **Top 10**: http://localhost:3000/accounts
+- **TAM by SKU**: http://localhost:3000/tam
